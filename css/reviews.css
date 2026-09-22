@@ -1,0 +1,156 @@
+/* =========================================================
+   reviews.css
+   ========================================================= */
+
+.reviews {
+  background: var(--bg);
+  padding: 6rem 0;
+}
+
+.reviews__head {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+.reviews__title {
+  font-size: clamp(2rem, 3.4vw, 3.2rem);
+  margin: 0;
+}
+
+.reviews__title em {
+  color: var(--think);
+  font-weight: 400;
+}
+
+/* Carousel */
+
+.quotes-wrap {
+  position: relative;
+  max-width: 960px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.quotes {
+  position: relative;
+  max-width: 780px;
+  margin: 0 auto;
+  min-height: 260px;
+  width: 100%;
+}
+
+/* Prev / Next arrows */
+
+.quotes__arrow {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid var(--cream-line);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--cream);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.quotes__arrow svg {
+  width: 22px;
+  height: 22px;
+}
+
+.quotes__arrow:hover {
+  background: var(--think-bg);
+  border-color: var(--think);
+  color: var(--think);
+  transform: translateY(-1px);
+}
+
+.quotes__arrow:active {
+  transform: translateY(0);
+}
+
+.quotes__arrow:focus-visible {
+  outline: 2px solid var(--think);
+  outline-offset: 3px;
+}
+
+.quote {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0 1rem;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  pointer-events: none;
+}
+
+.quote.is-active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  position: relative;
+}
+
+.quote__text {
+  font-size: clamp(1.2rem, 2vw, 1.7rem);
+  line-height: 1.5;
+  color: var(--cream);
+  margin: 0 0 2rem;
+  font-weight: 400;
+}
+
+.quote__cite {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.quote__name {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  color: var(--cream);
+}
+
+.quote__loc {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+}
+
+.quotes__dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.quotes__dots button {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(243, 238, 227, 0.2);
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.quotes__dots button:hover {
+  background: rgba(243, 238, 227, 0.4);
+}
+
+.quotes__dots button[aria-selected="true"] {
+  background: var(--think);
+  transform: scale(1.15);
+}

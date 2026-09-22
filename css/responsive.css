@@ -1,0 +1,166 @@
+/* =========================================================
+   responsive.css
+   Media queries — loaded last so overrides win
+   ========================================================= */
+
+@media (max-width: 960px) {
+  .hero__header {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+
+  .hero__nav {
+    display: none;
+  }
+
+  .hero__header-spacer {
+    display: none;
+  }
+
+  .hero__grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .form-card {
+    max-width: 100%;
+    justify-self: stretch;
+  }
+
+  .host__inner,
+  .faq__inner {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .faq__head {
+    position: static;
+  }
+
+  .host__portrait {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .host__inner {
+    gap: 3rem;
+  }
+
+  .stage {
+    flex: 1 1 220px;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding: 1.5rem 0 3rem;
+  }
+
+  .hero .brand {
+    padding: 0.5rem 0 2rem;
+  }
+
+  .hero__float-cta {
+    top: 0.75rem;
+    right: 0.75rem;
+    padding: 0.5rem 0.9rem;
+    font-size: 0.78rem;
+  }
+
+  .hero__headline {
+    font-size: clamp(2rem, 8vw, 2.8rem);
+  }
+
+  .tl-pill {
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    padding: 0.45rem 0.85rem;
+    gap: 0.4rem;
+  }
+
+  .form-card__title {
+    font-size: 1.6rem;
+  }
+
+  .price__new {
+    font-size: 1.75rem;
+  }
+
+  .stats {
+    gap: 1.5rem 1.75rem;
+  }
+
+  .stats__num {
+    font-size: 1.75rem;
+  }
+
+  .framework,
+  .host,
+  .reviews,
+  .journey,
+  .faq {
+    padding: 4rem 0;
+  }
+
+  .banner {
+    padding: 5rem 0;
+  }
+
+  .acc summary {
+    grid-template-columns: auto auto 1fr auto;
+    gap: 0.75rem;
+    padding: 1.25rem 0;
+  }
+
+  .acc__label {
+    font-size: 1.5rem;
+  }
+
+  .acc__hint {
+    font-size: 0.88rem;
+    padding-left: 0.5rem;
+  }
+
+  .acc__body {
+    padding-left: 0;
+  }
+
+  .faq-item summary {
+    gap: 0.75rem;
+  }
+
+  .faq-item__q {
+    font-size: 1.1rem;
+  }
+
+  .faq-item__a {
+    padding-left: 22px;
+  }
+
+  .host__quote-mark {
+    top: -2rem;
+    left: -0.5rem;
+    font-size: 6rem;
+  }
+
+  .footer__inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .quotes-wrap {
+    gap: 0.5rem;
+  }
+
+  .quotes__arrow {
+    width: 40px;
+    height: 40px;
+  }
+
+  .quotes__arrow svg {
+    width: 18px;
+    height: 18px;
+  }
+}
