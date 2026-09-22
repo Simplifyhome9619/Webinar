@@ -419,9 +419,9 @@ h3 {
 
 .brand__name {
   font-family: var(--font-sans);
-  font-weight: 400;
-  font-size: 1.35rem;
-  letter-spacing: 0;
+  font-weight: 300;
+  font-size: 1.3rem;
+  letter-spacing: 0.01em;
   line-height: 1;
   color: var(--cream);
 }
