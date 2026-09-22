@@ -7,28 +7,68 @@
 (function () {
   "use strict";
 
-  /* ---- Registration form: swap for success state ---- */
+  /* ---- Registration form: save lead to Google Sheet, then redirect to TagMango payment ---- */
+
+  // Google Apps Script Web App endpoint — appends each submission as a row in "Webinar Leads" sheet.
+  const SHEET_URL = "https://script.google.com/macros/s/AKfycbzwwKYerLN7EWD2OTsG2gNYs2omKzwDKjmWd-sXQlq1K7iuBkClgQTWB_lWhS8gaVyxfg/exec";
+
+  // TagMango payment link — paste the real URL here once purchased.
+  // While it's the empty string, the form just saves the lead and shows the success message.
+  const PAYMENT_URL = "";
+
   const form = document.getElementById("regForm");
   const success = document.getElementById("regSuccess");
 
   if (form && success) {
-    form.addEventListener("submit", function (e) {
+    form.addEventListener("submit", async function (e) {
       e.preventDefault();
 
-      // Basic client-side validity gate
       if (!form.checkValidity()) {
         form.reportValidity();
         return;
       }
 
-      // TODO: wire to backend (Elementor form action / CRM webhook / Google Sheet)
-      // For now, capture values so they're available for a future integration.
-      const data = Object.fromEntries(new FormData(form).entries());
-      // eslint-disable-next-line no-console
-      console.log("[reg] submitted", data);
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Reserving…";
+
+      const formData = new FormData(form);
+      const data = {
+        name:    formData.get("name")    || "",
+        country: formData.get("country") || "",
+        phone:   (formData.get("country") || "") + " " + (formData.get("phone") || ""),
+        email:   formData.get("email")   || ""
+      };
+
+      // POST to Google Sheets. Uses no-cors because Apps Script doesn't set
+      // CORS headers by default — the response is opaque, but the row still
+      // gets written on the server side.
+      try {
+        await fetch(SHEET_URL, {
+          method: "POST",
+          mode: "no-cors",
+          body: JSON.stringify(data)
+        });
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.warn("[reg] sheet-save error:", err);
+      }
 
       form.hidden = true;
       success.hidden = false;
+
+      if (PAYMENT_URL) {
+        window.setTimeout(function () {
+          window.location.href = PAYMENT_URL;
+        }, 900);
+      }
+
+      // Safety: restore button state if the redirect is blocked or absent.
+      window.setTimeout(function () {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }, 6000);
     });
   }
 
