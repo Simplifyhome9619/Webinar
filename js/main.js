@@ -77,7 +77,8 @@
         name:    formData.get("name")    || "",
         country: formData.get("country") || "",
         phone:   (formData.get("country") || "") + " " + (formData.get("phone") || ""),
-        email:   formData.get("email")   || ""
+        email:   formData.get("email")   || "",
+        source:  "webinar"  // A/B test tag: which landing page this lead came from
       };
 
       // POST to Google Sheets. Uses no-cors because Apps Script doesn't set
