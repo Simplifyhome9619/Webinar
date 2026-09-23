@@ -7,6 +7,40 @@
 (function () {
   "use strict";
 
+  /* ---- Mobile menu toggle ---- */
+  const menuToggle = document.getElementById("menuToggle");
+  const mobileMenu = document.getElementById("mobileMenu");
+
+  if (menuToggle && mobileMenu) {
+    function setMenu(open) {
+      menuToggle.setAttribute("aria-expanded", open ? "true" : "false");
+      menuToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      mobileMenu.hidden = !open;
+      document.body.classList.toggle("menu-open", open);
+    }
+
+    menuToggle.addEventListener("click", function () {
+      const isOpen = menuToggle.getAttribute("aria-expanded") === "true";
+      setMenu(!isOpen);
+    });
+
+    // Close when any link inside the menu is tapped (so scroll-to-anchor works)
+    mobileMenu.querySelectorAll("a").forEach(function (a) {
+      a.addEventListener("click", function () { setMenu(false); });
+    });
+
+    // Close on Escape
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !mobileMenu.hidden) setMenu(false);
+    });
+
+    // Close if viewport widens back to desktop (avoids stuck-open menu on rotate/resize)
+    const mq = window.matchMedia("(min-width: 961px)");
+    mq.addEventListener("change", function (e) {
+      if (e.matches && !mobileMenu.hidden) setMenu(false);
+    });
+  }
+
   /* ---- Registration form: save lead to Google Sheet, then redirect to TagMango payment ---- */
 
   // Google Apps Script Web App endpoint — appends each submission as a row in "Webinar Leads" sheet.

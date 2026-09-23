@@ -87,6 +87,19 @@
         </nav>
 
         <span class="hero__header-spacer" aria-hidden="true"></span>
+
+        <button
+          class="menu-toggle"
+          id="menuToggle"
+          type="button"
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="mobileMenu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </header>
 
       <div class="hero__grid">
@@ -557,6 +570,18 @@
       <p class="footer__legal">&copy; 2026 Jairaj Jagadeesh. All rights reserved.</p>
     </div>
   </footer>
+
+  <!-- Mobile menu overlay -->
+  <div class="mobile-menu" id="mobileMenu" hidden>
+    <nav class="mobile-menu__nav" aria-label="Mobile primary">
+      <a href="#framework">Framework</a>
+      <a href="#host">Host</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#journey">Journey</a>
+      <a href="#faq">FAQ</a>
+      <a href="#regForm" class="mobile-menu__cta">Reserve My Seat &mdash; &#8377;99</a>
+    </nav>
+  </div>
 
   <script src="js/main.js" defer></script>
 </body>

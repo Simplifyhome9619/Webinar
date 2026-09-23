@@ -3,10 +3,142 @@
    Media queries — loaded last so overrides win
    ========================================================= */
 
+/* ---- Hamburger button (visible only on mobile) ---- */
+
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 30;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 1.5px solid rgba(243, 238, 227, 0.4);
+  border-radius: 50%;
+  background: rgba(16, 13, 10, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 5px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.menu-toggle:hover {
+  background: rgba(16, 13, 10, 0.85);
+  border-color: var(--think);
+}
+
+.menu-toggle[aria-expanded="true"] {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(243, 238, 227, 0.6);
+}
+
+.menu-toggle span {
+  display: block;
+  width: 18px;
+  height: 1.5px;
+  background: var(--cream);
+  transform-origin: center;
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.15s ease;
+}
+
+.menu-toggle[aria-expanded="true"] span:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+
+.menu-toggle[aria-expanded="true"] span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle[aria-expanded="true"] span:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+
+/* ---- Mobile menu overlay ---- */
+
+.mobile-menu[hidden] {
+  display: none;
+}
+
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 22;
+  background: #100D0A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 2rem 2rem;
+  animation: mobileMenuFade 0.22s ease-out;
+}
+
+@keyframes mobileMenuFade {
+  from { opacity: 0; transform: scale(1.02); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.mobile-menu__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  text-align: center;
+  width: 100%;
+  max-width: 320px;
+}
+
+.mobile-menu__nav a {
+  font-family: var(--font-sans);
+  font-size: 1.1rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cream);
+  padding: 0.4rem 0;
+  transition: color 0.2s ease;
+}
+
+.mobile-menu__nav a:hover,
+.mobile-menu__nav a:focus-visible {
+  color: var(--think);
+}
+
+.mobile-menu__cta {
+  margin-top: 1.5rem;
+  padding: 0.95rem 1.6rem !important;
+  background: var(--cream);
+  color: var(--ink) !important;
+  border-radius: 4px;
+  font-size: 0.95rem !important;
+  letter-spacing: 0.02em !important;
+  text-transform: none !important;
+  font-weight: 500;
+}
+
+.mobile-menu__cta:hover {
+  background: #fff;
+  color: var(--ink) !important;
+}
+
+/* Lock body scroll when menu is open */
+body.menu-open {
+  overflow: hidden;
+}
+
+/* =========================================================
+   Media queries
+   ========================================================= */
+
 @media (max-width: 960px) {
   .hero__header {
     grid-template-columns: 1fr;
     justify-items: start;
+    align-items: center;
   }
 
   .hero__nav {
@@ -14,6 +146,15 @@
   }
 
   .hero__header-spacer {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+  }
+
+  /* Floating CTA hidden on mobile — the hamburger menu already includes a Reserve CTA */
+  .hero__float-cta {
     display: none;
   }
 
