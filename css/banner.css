@@ -47,7 +47,7 @@
 }
 
 .banner__title {
-  font-size: clamp(2.4rem, 4vw, 3.6rem);
+  font-size: clamp(1.6rem, 2.6vw, 2.3rem);
   margin: 0 0 2rem;
-  line-height: 1.15;
+  line-height: 1.25;
 }
