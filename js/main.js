@@ -10,6 +10,7 @@
   /* ---- Mobile menu toggle ---- */
   const menuToggle = document.getElementById("menuToggle");
   const mobileMenu = document.getElementById("mobileMenu");
+  const mobileMenuClose = document.getElementById("mobileMenuClose");
 
   if (menuToggle && mobileMenu) {
     function setMenu(open) {
@@ -23,6 +24,10 @@
       const isOpen = menuToggle.getAttribute("aria-expanded") === "true";
       setMenu(!isOpen);
     });
+
+    if (mobileMenuClose) {
+      mobileMenuClose.addEventListener("click", function () { setMenu(false); });
+    }
 
     // Close when any link inside the menu is tapped (so scroll-to-anchor works)
     mobileMenu.querySelectorAll("a").forEach(function (a) {
