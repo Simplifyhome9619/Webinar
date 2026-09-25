@@ -1,0 +1,110 @@
+/* =========================================================
+   framework.css
+   ========================================================= */
+
+.framework {
+  background: var(--paper);
+  color: var(--ink);
+  padding: 6rem 0;
+}
+
+.framework__head {
+  max-width: 720px;
+  margin-bottom: 3rem;
+}
+
+.framework__title {
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+  line-height: 1.25;
+  margin: 0 0 1rem;
+}
+
+.framework__lede {
+  color: var(--ink-dim);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  font-weight: 300;
+  letter-spacing: 0.005em;
+  margin: 0;
+  max-width: 620px;
+}
+
+/* Accordion */
+
+.accordion {
+  border-top: 1px solid var(--ink-line);
+}
+
+.acc {
+  border-bottom: 1px solid var(--ink-line);
+}
+
+.acc summary {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.75rem 0;
+  cursor: pointer;
+  list-style: none;
+  transition: opacity 0.2s ease;
+}
+
+.acc summary::-webkit-details-marker {
+  display: none;
+}
+
+.acc__label {
+  font-size: 1.9rem;
+  line-height: 1;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.acc--go .acc__label {
+  color: var(--go);
+}
+
+.acc--think .acc__label {
+  color: var(--think);
+}
+
+.acc--stop .acc__label {
+  color: var(--stop);
+}
+
+.acc__hint {
+  color: var(--ink-dim);
+  font-size: 1rem;
+  padding-left: 0.5rem;
+  border-left: 1px solid var(--ink-line);
+}
+
+.acc__chev {
+  width: 20px;
+  height: 20px;
+  border-right: 1.5px solid var(--ink);
+  border-bottom: 1.5px solid var(--ink);
+  transform: rotate(45deg);
+  transition: transform 0.25s ease;
+  margin-top: -6px;
+}
+
+.acc[open] .acc__chev {
+  transform: rotate(-135deg);
+  margin-top: 6px;
+}
+
+.acc__body {
+  padding: 0 0 2rem 34px;
+  max-width: 780px;
+}
+
+.acc__body p {
+  color: var(--ink);
+  font-size: 0.92rem;
+  line-height: 1.75;
+  font-weight: 300;
+  letter-spacing: 0.005em;
+  margin: 0;
+}
