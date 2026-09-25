@@ -124,13 +124,21 @@
       submitBtn.disabled = true;
       submitBtn.textContent = "Reserving…";
 
+      // Detect source from the current hostname so the SAME main.js can be
+      // deployed to both landing pages without any per-file editing.
+      // (connect.jairajjagadeesh.com → "connect", anything else → "webinar")
+      const host = (window.location.hostname || "").toLowerCase();
+      const source = host.indexOf("connect.") === 0 || host.indexOf("connect-") === 0
+        ? "connect"
+        : "webinar";
+
       const formData = new FormData(form);
       const data = {
         name:    formData.get("name")    || "",
         country: formData.get("country") || "",
         phone:   (formData.get("country") || "") + " " + (formData.get("phone") || ""),
         email:   formData.get("email")   || "",
-        source:  "webinar"  // A/B test tag: which landing page this lead came from
+        source:  source  // A/B test tag: auto-detected from hostname
       };
 
       // POST to Google Sheets. Uses no-cors because Apps Script doesn't set
