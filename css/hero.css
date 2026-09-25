@@ -336,6 +336,17 @@
   line-height: 1.15;
 }
 
+.webinar-card__val em {
+  display: block;
+  font-family: var(--font-sans);
+  font-style: normal;
+  font-size: 0.68rem;
+  font-weight: 300;
+  color: var(--cream-dim);
+  letter-spacing: 0.02em;
+  margin-top: 0.15rem;
+}
+
 /* ---- Slim single-line countdown ---- */
 
 .countdown--big {
