@@ -202,7 +202,7 @@
   background: rgba(16, 13, 10, 0.75);
   border: 1px solid var(--cream-line);
   border-radius: var(--radius-lg);
-  padding: 2rem 1.75rem;
+  padding: 1.5rem 1.5rem;
   box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.7);
   max-width: 460px;
   justify-self: end;
@@ -212,20 +212,20 @@
 }
 
 .form-card__head {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .form-card__title {
-  font-size: 1.9rem;
+  font-size: 1.5rem;
   line-height: 1.15;
-  margin: 0 0 0.5rem;
+  margin: 0;
 }
 
 .form-card__sub {
   color: var(--cream-dim);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   line-height: 1.5;
-  margin: 0;
+  margin: 0.35rem 0 0;
 }
 
 /* ---- Price row ---- */
@@ -234,8 +234,8 @@
   display: flex;
   align-items: center;
   gap: 0.9rem;
-  margin: 0 0 0.4rem;
-  padding-top: 1.25rem;
+  margin: 0 0 0.9rem;
+  padding-top: 1rem;
   border-top: 1px solid var(--cream-line);
 }
 
@@ -270,87 +270,124 @@
   margin: 0 0 1.5rem;
 }
 
-/* ---- Webinar date / platform / language ---- */
+/* ---- Webinar info cards (2x2 grid with icons) ---- */
 
-.webinar-meta {
-  margin: 0 0 1.5rem;
-  padding: 0.75rem 0.9rem;
-  background: rgba(214, 154, 62, 0.06);
-  border-left: 2px solid var(--think);
-  border-radius: 2px;
-}
-
-.webinar-meta__when {
-  margin: 0;
-  font-size: 0.9rem;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  color: var(--cream);
-}
-
-.webinar-meta__how {
-  margin: 0.2rem 0 0;
-  font-size: 0.78rem;
-  font-weight: 300;
-  letter-spacing: 0.02em;
-  color: var(--cream-dim);
-}
-
-/* ---- Countdown ---- */
-
-.countdown {
+.webinar-cards {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.4rem;
-  margin: 0 0 1.5rem;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  margin: 2rem 0 0.85rem;
+  max-width: 520px;
 }
 
-.countdown__item {
-  padding: 0.65rem 0.3rem;
+.webinar-card {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.65rem;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--cream-line);
-  border-radius: 4px;
-  text-align: center;
+  border-radius: 6px;
 }
 
-.countdown__num {
-  display: block;
-  font-family: var(--font-serif);
-  font-size: 1.4rem;
-  font-weight: 500;
-  color: var(--cream);
-  letter-spacing: -0.01em;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
+.webinar-card__icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--think-bg);
+  color: var(--think);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-.countdown__lbl {
-  display: block;
-  font-size: 0.62rem;
-  letter-spacing: 0.15em;
+.webinar-card__icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.webinar-card__meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.2;
+}
+
+.webinar-card__lbl {
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--cream-dim);
-  margin-top: 0.35rem;
   font-weight: 400;
+  margin-bottom: 0.1rem;
+}
+
+.webinar-card__val {
+  font-size: 0.88rem;
+  color: var(--cream);
+  font-weight: 500;
+  letter-spacing: 0.005em;
+}
+
+/* ---- Slim single-line countdown ---- */
+
+.countdown--slim {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.6rem 0.9rem;
+  margin: 0 0 1.1rem;
+  background: rgba(214, 154, 62, 0.06);
+  border: 1px solid rgba(214, 154, 62, 0.2);
+  border-radius: 6px;
+  font-size: 0.82rem;
+  color: var(--cream);
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+  max-width: 520px;
+}
+
+.countdown__prefix {
+  color: var(--cream-dim);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.countdown__cell {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.1rem;
+}
+
+.countdown__cell b {
+  font-weight: 500;
+  color: var(--cream);
+  font-size: 0.95rem;
+}
+
+.countdown__cell em {
+  font-style: normal;
+  color: var(--cream-dim);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
 }
 
 .countdown__msg {
-  grid-column: 1 / -1;
-  padding: 0.85rem 0.5rem;
+  display: block;
+  width: 100%;
+  padding: 0.55rem 0.5rem;
   text-align: center;
-  font-size: 0.92rem;
+  font-size: 0.85rem;
   font-weight: 500;
   color: var(--go);
-  background: rgba(91, 148, 100, 0.1);
-  border: 1px solid rgba(91, 148, 100, 0.3);
-  border-radius: 4px;
   letter-spacing: 0.01em;
 }
 
 .countdown__msg--ended {
   color: var(--cream-dim);
-  background: rgba(255, 255, 255, 0.03);
-  border-color: var(--cream-line);
 }
 
 /* ---- Required marker on labels ---- */
