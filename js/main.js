@@ -7,23 +7,18 @@
 (function () {
   "use strict";
 
-  /* ---- Countdown to the live session ---- */
+  /* ---- Countdown to the live session (supports multiple countdowns on the page) ---- */
   // Target: Saturday, 10 October 2026, 6:00 PM IST (UTC+5:30)
   const WEBINAR_TS = new Date("2026-10-10T18:00:00+05:30").getTime();
   const WEBINAR_LEN_MS = 90 * 60 * 1000; // 90 min live window
 
-  const countdownEl = document.getElementById("countdown");
+  const countdownEls = document.querySelectorAll(".countdown");
 
-  if (countdownEl) {
-    const dEl = countdownEl.querySelector("[data-d]");
-    const hEl = countdownEl.querySelector("[data-h]");
-    const mEl = countdownEl.querySelector("[data-m]");
-    const sEl = countdownEl.querySelector("[data-s]");
-
+  if (countdownEls.length) {
     const pad = (n) => String(n).padStart(2, "0");
 
-    function renderMsg(cls, text) {
-      countdownEl.innerHTML =
+    function renderMsg(el, cls, text) {
+      el.innerHTML =
         '<div class="countdown__msg ' + cls + '">' + text + "</div>";
     }
 
@@ -32,24 +27,32 @@
       const diff = WEBINAR_TS - Date.now();
 
       if (diff <= 0) {
-        if (diff > -WEBINAR_LEN_MS) {
-          renderMsg("", "Session is live now &mdash; join on Zoom");
-        } else {
-          renderMsg("countdown__msg--ended", "Session ended.");
-        }
+        countdownEls.forEach(function (el) {
+          if (diff > -WEBINAR_LEN_MS) {
+            renderMsg(el, "", "Session is live now &mdash; join on Zoom");
+          } else {
+            renderMsg(el, "countdown__msg--ended", "Session ended.");
+          }
+        });
         window.clearInterval(timer);
         return;
       }
 
-      const d = Math.floor(diff / 86400000);
-      const h = Math.floor((diff % 86400000) / 3600000);
-      const m = Math.floor((diff % 3600000) / 60000);
-      const s = Math.floor((diff % 60000) / 1000);
+      const d = pad(Math.floor(diff / 86400000));
+      const h = pad(Math.floor((diff % 86400000) / 3600000));
+      const m = pad(Math.floor((diff % 3600000) / 60000));
+      const s = pad(Math.floor((diff % 60000) / 1000));
 
-      dEl.textContent = pad(d);
-      hEl.textContent = pad(h);
-      mEl.textContent = pad(m);
-      sEl.textContent = pad(s);
+      countdownEls.forEach(function (el) {
+        const dEl = el.querySelector("[data-d]");
+        const hEl = el.querySelector("[data-h]");
+        const mEl = el.querySelector("[data-m]");
+        const sEl = el.querySelector("[data-s]");
+        if (dEl) dEl.textContent = d;
+        if (hEl) hEl.textContent = h;
+        if (mEl) mEl.textContent = m;
+        if (sEl) sEl.textContent = s;
+      });
     }
 
     tick();
