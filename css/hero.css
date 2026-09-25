@@ -270,6 +270,32 @@
   margin: 0 0 1.5rem;
 }
 
+/* ---- Webinar date / platform / language ---- */
+
+.webinar-meta {
+  margin: 0 0 1.5rem;
+  padding: 0.75rem 0.9rem;
+  background: rgba(214, 154, 62, 0.06);
+  border-left: 2px solid var(--think);
+  border-radius: 2px;
+}
+
+.webinar-meta__when {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--cream);
+}
+
+.webinar-meta__how {
+  margin: 0.2rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  color: var(--cream-dim);
+}
+
 /* ---- Required marker on labels ---- */
 
 .field__lbl .req {
