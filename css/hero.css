@@ -332,55 +332,87 @@
 
 /* ---- Slim single-line countdown ---- */
 
-.countdown--slim {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.55rem;
-  padding: 0.6rem 0.9rem;
-  margin: 0 0 1.1rem;
-  background: rgba(214, 154, 62, 0.06);
-  border: 1px solid rgba(214, 154, 62, 0.2);
-  border-radius: 6px;
-  font-size: 0.82rem;
-  color: var(--cream);
-  letter-spacing: 0.01em;
-  font-variant-numeric: tabular-nums;
+.countdown--big {
+  display: block;
+  padding: 1.15rem 1.35rem 1.25rem;
+  margin: 0 0 1.5rem;
+  background: linear-gradient(135deg, #1a140d 0%, #241a10 100%);
+  border: 1.5px solid rgba(214, 154, 62, 0.55);
+  border-radius: 10px;
   max-width: 520px;
+  box-shadow:
+    0 12px 30px -12px rgba(0, 0, 0, 0.6),
+    0 0 60px -28px rgba(214, 154, 62, 0.5);
 }
 
-.countdown__prefix {
-  color: var(--cream-dim);
-  font-size: 0.72rem;
-  letter-spacing: 0.06em;
+.countdown__label {
+  display: block;
+  text-align: center;
+  font-size: 0.7rem;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
+  color: var(--think);
+  font-weight: 500;
+  margin-bottom: 0.9rem;
 }
 
-.countdown__cell {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.1rem;
+.countdown__grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+  align-items: center;
+  gap: 0.35rem;
 }
 
-.countdown__cell b {
+.countdown__unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.countdown__unit b {
+  font-family: var(--font-serif);
+  font-size: 2.4rem;
   font-weight: 500;
   color: var(--cream);
-  font-size: 0.95rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
-.countdown__cell em {
-  font-style: normal;
+.countdown__unit span {
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
   color: var(--cream-dim);
-  font-size: 0.7rem;
-  letter-spacing: 0.05em;
+  font-weight: 400;
+}
+
+.countdown__sep {
+  font-family: var(--font-serif);
+  font-size: 1.9rem;
+  color: var(--think);
+  opacity: 0.5;
+  line-height: 1;
+  transform: translateY(-6px);
+  font-weight: 400;
+}
+
+.countdown__unit:last-child b {
+  animation: pulseSec 1s ease-in-out infinite;
+}
+
+@keyframes pulseSec {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.75; }
 }
 
 .countdown__msg {
   display: block;
   width: 100%;
-  padding: 0.55rem 0.5rem;
+  padding: 0.85rem 0.5rem;
   text-align: center;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   font-weight: 500;
   color: var(--go);
   letter-spacing: 0.01em;
