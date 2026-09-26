@@ -1,61 +1,51 @@
 /* =========================================================
    webinar-video.css
    Preview video section between reviews and journey.
+   Fonts inherit from base.css shared classes: .kicker + .serif h2 +
+   body Poppins Light. Only layout / sizing / frame styling lives here
+   so this section reads as part of the same design system as journey.
    ========================================================= */
 
 .wv {
+  background: var(--bg);
   padding: 5rem 0 6rem;
-  background: transparent;
 }
 
 .wv__inner {
-  max-width: 960px;
+  max-width: 720px;
   margin: 0 auto;
-  padding: 0 1.25rem;
+  padding: 0 1.5rem;
   text-align: center;
 }
 
-.wv__kicker {
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
-  font-size: 0.78rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: #c9a86a;
+.wv__title {
+  font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+  line-height: 1.3;
   margin: 0 0 1rem;
 }
 
-.wv__title {
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: 600;
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
-  line-height: 1.2;
-  color: #f6efe4;
-  margin: 0 0 0.9rem;
-}
-
 .wv__lede {
-  font-family: "Poppins", sans-serif;
+  color: var(--cream-dim);
+  font-size: 0.95rem;
+  line-height: 1.7;
   font-weight: 300;
-  font-size: clamp(0.95rem, 1.4vw, 1.05rem);
-  line-height: 1.6;
-  color: rgba(246, 239, 228, 0.78);
-  max-width: 680px;
+  letter-spacing: 0.005em;
   margin: 0 auto 2.5rem;
+  max-width: 620px;
 }
 
 .wv__frame {
   position: relative;
   width: 100%;
-  max-width: 380px;   /* vertical 9:16 video: constrain width */
+  max-width: 380px;
   margin: 0 auto;
   aspect-ratio: 9 / 16;
-  border-radius: 18px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
   background: #0e0a06;
   box-shadow:
     0 22px 60px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(201, 168, 106, 0.22) inset;
+    0 0 0 1px var(--cream-line) inset;
 }
 
 .wv__video {
@@ -71,5 +61,5 @@
 @media (max-width: 600px) {
   .wv { padding: 3.5rem 0 4rem; }
   .wv__lede { margin-bottom: 1.75rem; }
-  .wv__frame { border-radius: 14px; max-width: 320px; }
+  .wv__frame { max-width: 320px; }
 }
