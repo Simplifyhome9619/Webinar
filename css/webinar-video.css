@@ -1,0 +1,71 @@
+/* =========================================================
+   webinar-video.css
+   Preview video section between reviews and journey.
+   ========================================================= */
+
+.wv {
+  padding: 5rem 0 6rem;
+  background: transparent;
+}
+
+.wv__inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  text-align: center;
+}
+
+.wv__kicker {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #c9a86a;
+  margin: 0 0 1rem;
+}
+
+.wv__title {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  line-height: 1.2;
+  color: #f6efe4;
+  margin: 0 0 0.9rem;
+}
+
+.wv__lede {
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-size: clamp(0.95rem, 1.4vw, 1.05rem);
+  line-height: 1.6;
+  color: rgba(246, 239, 228, 0.78);
+  max-width: 680px;
+  margin: 0 auto 2.5rem;
+}
+
+.wv__frame {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 */
+  border-radius: 14px;
+  overflow: hidden;
+  background: #0e0a06;
+  box-shadow:
+    0 22px 60px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(201, 168, 106, 0.18) inset;
+}
+
+.wv__frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+@media (max-width: 600px) {
+  .wv { padding: 3.5rem 0 4rem; }
+  .wv__lede { margin-bottom: 1.75rem; }
+  .wv__frame { border-radius: 10px; }
+}
