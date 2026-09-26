@@ -3,6 +3,19 @@
    Media queries — loaded last so overrides win
    ========================================================= */
 
+/* ---- Perf: skip rendering of off-screen sections until they scroll near.
+   contain-intrinsic-size stops layout shift while the section is hidden. */
+.wv,
+.journey,
+.host-section,
+.reviews,
+.countdown-strip,
+.faq,
+.banner {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 700px;
+}
+
 /* ---- Hamburger button (visible only on mobile) ---- */
 
 .menu-toggle {
