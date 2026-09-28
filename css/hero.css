@@ -466,6 +466,19 @@
   flex-shrink: 0;
 }
 
+/* ---- Payment error message ---- */
+
+.reg-form__error {
+  margin: 0.75rem 0 0;
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  background: rgba(220, 60, 60, 0.12);
+  border: 1px solid rgba(220, 60, 60, 0.45);
+  color: #ffb4b4;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
 /* ---- Success state ---- */
 
 .reg-success {
