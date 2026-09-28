@@ -1,6 +1,6 @@
 /* =========================================================
    main.js
-   - Registration form success state (front-end only)
+   - Registration form: lead save + Razorpay Checkout
    - Testimonial fade carousel
    ========================================================= */
 
@@ -98,21 +98,46 @@
     });
   }
 
-  /* ---- Registration form: save lead to Google Sheet, then redirect to TagMango payment ---- */
+  /* ---- Registration form: save lead to Google Sheet, then Razorpay Checkout ---- */
 
   // Google Apps Script Web App endpoint — appends each submission as a row in "Webinar Leads" sheet.
   const SHEET_URL = "https://script.google.com/macros/s/AKfycbzwwKYerLN7EWD2OTsG2gNYs2omKzwDKjmWd-sXQlq1K7iuBkClgQTWB_lWhS8gaVyxfg/exec";
 
-  // TagMango payment link — paste the real URL here once purchased.
-  // While it's the empty string, the form just saves the lead and shows the success message.
-  const PAYMENT_URL = "";
+  // Payment API (Vercel serverless functions in the Webinar repo: /api/create-order,
+  // /api/verify-payment). Both landing pages are on GitHub Pages, so they call the
+  // Vercel deployment directly; on the Vercel domain itself a relative path works.
+  const PAY_API = /\.vercel\.app$/.test(window.location.hostname)
+    ? ""
+    : "https://webinar-psi-nine.vercel.app";
 
   const form = document.getElementById("regForm");
   const success = document.getElementById("regSuccess");
+  const formError = document.getElementById("regError");
+
+  function showFormError(msg) {
+    if (!formError) { window.alert(msg); return; }
+    formError.textContent = msg;
+    formError.hidden = !msg;
+  }
+
+  async function postJSON(path, payload) {
+    const res = await fetch(PAY_API + path, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    let json = {};
+    try { json = await res.json(); } catch (e) { /* non-JSON error page */ }
+    if (!res.ok) {
+      throw new Error(json.error || "Something went wrong. Please try again.");
+    }
+    return json;
+  }
 
   if (form && success) {
     form.addEventListener("submit", async function (e) {
       e.preventDefault();
+      showFormError("");
 
       if (!form.checkValidity()) {
         form.reportValidity();
@@ -120,9 +145,14 @@
       }
 
       const submitBtn = form.querySelector('button[type="submit"]');
-      const originalText = submitBtn.textContent;
+      const originalHTML = submitBtn.innerHTML;
       submitBtn.disabled = true;
       submitBtn.textContent = "Reserving…";
+
+      function resetBtn() {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalHTML;
+      }
 
       // Detect source from the current hostname so the SAME main.js can be
       // deployed to both landing pages without any per-file editing.
@@ -141,9 +171,9 @@
         source:  source  // A/B test tag: auto-detected from hostname
       };
 
-      // POST to Google Sheets. Uses no-cors because Apps Script doesn't set
-      // CORS headers by default — the response is opaque, but the row still
-      // gets written on the server side.
+      // 1) Save the lead first, so we keep it even if they abandon payment.
+      // Uses no-cors because Apps Script doesn't set CORS headers by default —
+      // the response is opaque, but the row still gets written on the server side.
       try {
         await fetch(SHEET_URL, {
           method: "POST",
@@ -155,20 +185,91 @@
         console.warn("[reg] sheet-save error:", err);
       }
 
-      form.hidden = true;
-      success.hidden = false;
-
-      if (PAYMENT_URL) {
-        window.setTimeout(function () {
-          window.location.href = PAYMENT_URL;
-        }, 900);
+      // 2) Create the Razorpay order (amount is fixed on the server).
+      let order;
+      try {
+        order = await postJSON("/api/create-order", {
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          source: source
+        });
+      } catch (err) {
+        showFormError(err.message);
+        resetBtn();
+        return;
       }
 
-      // Safety: restore button state if the redirect is blocked or absent.
-      window.setTimeout(function () {
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
-      }, 6000);
+      if (typeof window.Razorpay !== "function") {
+        showFormError("Payment window couldn't load. Please check your connection and try again.");
+        resetBtn();
+        return;
+      }
+
+      // 3) Open the Razorpay modal.
+      submitBtn.textContent = "Opening payment…";
+
+      const rzp = new window.Razorpay({
+        key: order.key_id,
+        order_id: order.order_id,
+        amount: order.amount,
+        currency: order.currency,
+        name: "Jairaj Jagadeesh",
+        description: "Live Webinar — Seat Reservation",
+        prefill: {
+          name: data.name,
+          email: data.email,
+          contact: data.phone.replace(/\s+/g, "")
+        },
+        notes: { source: source },
+        theme: { color: "#E0A43A" },
+
+        // 4) On success, verify the signature on the server before confirming.
+        handler: async function (resp) {
+          submitBtn.textContent = "Confirming payment…";
+          try {
+            const result = await postJSON("/api/verify-payment", {
+              razorpay_order_id:   resp.razorpay_order_id,
+              razorpay_payment_id: resp.razorpay_payment_id,
+              razorpay_signature:  resp.razorpay_signature
+            });
+            if (!result.verified) throw new Error("Payment verification failed.");
+
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+              event: "webinar_payment_success",
+              source: source,
+              value: order.amount / 100,
+              currency: order.currency,
+              transaction_id: resp.razorpay_payment_id
+            });
+
+            form.hidden = true;
+            success.hidden = false;
+          } catch (err) {
+            showFormError(
+              "We couldn't confirm your payment. If money was deducted, please WhatsApp us with Payment ID " +
+              resp.razorpay_payment_id + "."
+            );
+            resetBtn();
+          }
+        },
+
+        modal: {
+          ondismiss: function () {
+            showFormError("Payment cancelled — your seat isn't reserved yet.");
+            resetBtn();
+          }
+        }
+      });
+
+      rzp.on("payment.failed", function (resp) {
+        const reason = resp && resp.error && resp.error.description;
+        showFormError("Payment failed" + (reason ? ": " + reason.replace(/\.?\s*$/, ".") : ".") + " Please try again.");
+        // The modal stays open so they can retry; ondismiss resets the button if they close it.
+      });
+
+      rzp.open();
     });
   }
 
