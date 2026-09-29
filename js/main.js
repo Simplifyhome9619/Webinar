@@ -98,9 +98,14 @@
     });
   }
 
-  /* ---- Registration form: redirect straight to TagMango checkout ---- */
-  // TagMango short link — checkout happens on TagMango's own page and lead
-  // capture lives there too, so this file no longer POSTs to Google Sheets.
+  /* ---- Registration form: save lead to Google Sheet, then redirect to TagMango ---- */
+
+  // Google Apps Script Web App endpoint — appends each submission as a row in
+  // the "Webinar Leads" sheet. We save the lead BEFORE handing off to TagMango
+  // so we still have their contact details even if they abandon the payment.
+  const SHEET_URL = "https://script.google.com/macros/s/AKfycbzwwKYerLN7EWD2OTsG2gNYs2omKzwDKjmWd-sXQlq1K7iuBkClgQTWB_lWhS8gaVyxfg/exec";
+
+  // TagMango short link — checkout happens on TagMango's own page.
   const PAYMENT_URL = "https://webinar.jairajjagadeesh.com/l/ac18efdc8b";
 
   const form = document.getElementById("regForm");
@@ -135,6 +140,36 @@
       const source = host.indexOf("connect.") === 0 || host.indexOf("connect-") === 0
         ? "connect"
         : "webinar";
+
+      // Build the lead payload from the form.
+      const formData = new FormData(form);
+      const data = {
+        name:    formData.get("name")    || "",
+        country: formData.get("country") || "",
+        phone:   (formData.get("country") || "") + " " + (formData.get("phone") || ""),
+        email:   formData.get("email")   || "",
+        source:  source  // A/B test tag: auto-detected from hostname
+      };
+
+      // Fire-and-forget the lead save. keepalive:true lets the request finish
+      // even after we navigate away, so we don't have to await it and hold up
+      // the redirect (Apps Script can take 1-2s to respond on cold start).
+      // Uses no-cors because Apps Script doesn't set CORS headers by default —
+      // the response is opaque, but the row still gets written server-side.
+      try {
+        fetch(SHEET_URL, {
+          method: "POST",
+          mode: "no-cors",
+          body: JSON.stringify(data),
+          keepalive: true
+        }).catch(function (err) {
+          // eslint-disable-next-line no-console
+          console.warn("[reg] sheet-save error:", err);
+        });
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.warn("[reg] sheet-save error:", err);
+      }
 
       // Fire GTM event before we hand the visitor off to TagMango.
       window.dataLayer = window.dataLayer || [];
