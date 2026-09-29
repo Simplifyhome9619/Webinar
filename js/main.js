@@ -98,17 +98,13 @@
     });
   }
 
-  /* ---- Registration form: save lead to Google Sheet, then Razorpay Checkout ---- */
+  /* ---- Registration form: save lead to Google Sheet, then redirect to TagMango payment ---- */
 
   // Google Apps Script Web App endpoint — appends each submission as a row in "Webinar Leads" sheet.
   const SHEET_URL = "https://script.google.com/macros/s/AKfycbzwwKYerLN7EWD2OTsG2gNYs2omKzwDKjmWd-sXQlq1K7iuBkClgQTWB_lWhS8gaVyxfg/exec";
 
-  // Payment API (Vercel serverless functions in the Webinar repo: /api/create-order,
-  // /api/verify-payment). Both landing pages are on GitHub Pages, so they call the
-  // Vercel deployment directly; on the Vercel domain itself a relative path works.
-  const PAY_API = /\.vercel\.app$/.test(window.location.hostname)
-    ? ""
-    : "https://webinar-psi-nine.vercel.app";
+  // TagMango short link — checkout happens on TagMango's own page.
+  const PAYMENT_URL = "https://webinar.jairajjagadeesh.com/l/ac18efdc8b";
 
   const form = document.getElementById("regForm");
   const success = document.getElementById("regSuccess");
@@ -118,20 +114,6 @@
     if (!formError) { window.alert(msg); return; }
     formError.textContent = msg;
     formError.hidden = !msg;
-  }
-
-  async function postJSON(path, payload) {
-    const res = await fetch(PAY_API + path, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-    let json = {};
-    try { json = await res.json(); } catch (e) { /* non-JSON error page */ }
-    if (!res.ok) {
-      throw new Error(json.error || "Something went wrong. Please try again.");
-    }
-    return json;
   }
 
   if (form && success) {
@@ -148,11 +130,6 @@
       const originalHTML = submitBtn.innerHTML;
       submitBtn.disabled = true;
       submitBtn.textContent = "Reserving…";
-
-      function resetBtn() {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalHTML;
-      }
 
       // Detect source from the current hostname so the SAME main.js can be
       // deployed to both landing pages without any per-file editing.
@@ -171,7 +148,7 @@
         source:  source  // A/B test tag: auto-detected from hostname
       };
 
-      // 1) Save the lead first, so we keep it even if they abandon payment.
+      // Save the lead first, so we keep it even if the visitor abandons TagMango.
       // Uses no-cors because Apps Script doesn't set CORS headers by default —
       // the response is opaque, but the row still gets written on the server side.
       try {
@@ -185,91 +162,20 @@
         console.warn("[reg] sheet-save error:", err);
       }
 
-      // 2) Create the Razorpay order (amount is fixed on the server).
-      let order;
-      try {
-        order = await postJSON("/api/create-order", {
-          name: data.name,
-          email: data.email,
-          phone: data.phone,
-          source: source
-        });
-      } catch (err) {
-        showFormError(err.message);
-        resetBtn();
-        return;
-      }
+      // Fire GTM event before we hand the visitor off to TagMango.
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: "webinar_lead", source: source });
 
-      if (typeof window.Razorpay !== "function") {
-        showFormError("Payment window couldn't load. Please check your connection and try again.");
-        resetBtn();
-        return;
-      }
+      // Show the "redirecting" state, then send them to TagMango checkout.
+      form.hidden = true;
+      success.hidden = false;
 
-      // 3) Open the Razorpay modal.
-      submitBtn.textContent = "Opening payment…";
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalHTML;
 
-      const rzp = new window.Razorpay({
-        key: order.key_id,
-        order_id: order.order_id,
-        amount: order.amount,
-        currency: order.currency,
-        name: "Jairaj Jagadeesh",
-        description: "Live Webinar — Seat Reservation",
-        prefill: {
-          name: data.name,
-          email: data.email,
-          contact: data.phone.replace(/\s+/g, "")
-        },
-        notes: { source: source },
-        theme: { color: "#E0A43A" },
-
-        // 4) On success, verify the signature on the server before confirming.
-        handler: async function (resp) {
-          submitBtn.textContent = "Confirming payment…";
-          try {
-            const result = await postJSON("/api/verify-payment", {
-              razorpay_order_id:   resp.razorpay_order_id,
-              razorpay_payment_id: resp.razorpay_payment_id,
-              razorpay_signature:  resp.razorpay_signature
-            });
-            if (!result.verified) throw new Error("Payment verification failed.");
-
-            window.dataLayer = window.dataLayer || [];
-            window.dataLayer.push({
-              event: "webinar_payment_success",
-              source: source,
-              value: order.amount / 100,
-              currency: order.currency,
-              transaction_id: resp.razorpay_payment_id
-            });
-
-            form.hidden = true;
-            success.hidden = false;
-          } catch (err) {
-            showFormError(
-              "We couldn't confirm your payment. If money was deducted, please WhatsApp us with Payment ID " +
-              resp.razorpay_payment_id + "."
-            );
-            resetBtn();
-          }
-        },
-
-        modal: {
-          ondismiss: function () {
-            showFormError("Payment cancelled — your seat isn't reserved yet.");
-            resetBtn();
-          }
-        }
-      });
-
-      rzp.on("payment.failed", function (resp) {
-        const reason = resp && resp.error && resp.error.description;
-        showFormError("Payment failed" + (reason ? ": " + reason.replace(/\.?\s*$/, ".") : ".") + " Please try again.");
-        // The modal stays open so they can retry; ondismiss resets the button if they close it.
-      });
-
-      rzp.open();
+      window.setTimeout(function () {
+        window.location.href = PAYMENT_URL;
+      }, 900);
     });
   }
 
