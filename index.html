@@ -19,6 +19,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet" />
 
+  <!-- Warm up the TagMango checkout host so the "Reserve My Seat" redirect
+       is instant on the network side (no cold TLS handshake at click time). -->
+  <link rel="dns-prefetch" href="https://webinar.jairajjagadeesh.com" />
+  <link rel="preconnect" href="https://webinar.jairajjagadeesh.com" crossorigin />
+
   <link rel="stylesheet" href="css/base.css?v=20260925j" />
   <link rel="stylesheet" href="css/hero.css?v=20260928rzp" />
   <link rel="stylesheet" href="css/framework.css?v=20260925j" />
@@ -679,6 +684,6 @@
     </nav>
   </div>
 
-  <script src="js/main.js?v=20260929tm" defer></script>
+  <script src="js/main.js?v=20260929tmfast" defer></script>
 </body>
 </html>

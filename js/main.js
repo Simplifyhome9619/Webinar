@@ -148,14 +148,20 @@
         source:  source  // A/B test tag: auto-detected from hostname
       };
 
-      // Save the lead first, so we keep it even if the visitor abandons TagMango.
+      // Fire-and-forget the lead save. keepalive:true lets the request finish
+      // even after we navigate away, so we don't have to await it and hold up
+      // the redirect (Apps Script can take 1-2s to respond on cold start).
       // Uses no-cors because Apps Script doesn't set CORS headers by default —
-      // the response is opaque, but the row still gets written on the server side.
+      // the response is opaque, but the row still gets written server-side.
       try {
-        await fetch(SHEET_URL, {
+        fetch(SHEET_URL, {
           method: "POST",
           mode: "no-cors",
-          body: JSON.stringify(data)
+          body: JSON.stringify(data),
+          keepalive: true
+        }).catch(function (err) {
+          // eslint-disable-next-line no-console
+          console.warn("[reg] sheet-save error:", err);
         });
       } catch (err) {
         // eslint-disable-next-line no-console
@@ -166,7 +172,10 @@
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({ event: "webinar_lead", source: source });
 
-      // Show the "redirecting" state, then send them to TagMango checkout.
+      // Flash the "redirecting" state briefly so the user sees confirmation,
+      // then send them to TagMango. 250ms is enough for the swap to render
+      // without feeling laggy; the preconnect in <head> keeps the actual
+      // navigation snappy because the TLS handshake is already warm.
       form.hidden = true;
       success.hidden = false;
 
@@ -175,7 +184,7 @@
 
       window.setTimeout(function () {
         window.location.href = PAYMENT_URL;
-      }, 900);
+      }, 250);
     });
   }
 
