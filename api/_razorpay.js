@@ -8,7 +8,7 @@ const Razorpay = require("razorpay");
 // Pages allowed to call this API. Both landing pages live on GitHub
 // Pages, so the browser calls this Vercel deployment cross-origin.
 const ALLOWED_ORIGINS = [
-  "https://webinar.jairajjagadeesh.com",
+  "https://learn.jairajjagadeesh.com",
   "https://connect.jairajjagadeesh.com",
   "https://webinar-psi-nine.vercel.app",
   "http://localhost:3000",
