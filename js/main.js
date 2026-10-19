@@ -8,8 +8,8 @@
   "use strict";
 
   /* ---- Countdown to the live session (supports multiple countdowns on the page) ---- */
-  // Target: Saturday, 10 October 2026, 6:00 PM IST (UTC+5:30)
-  const WEBINAR_TS = new Date("2026-10-10T18:00:00+05:30").getTime();
+  // Target: Saturday, 31 October 2026, 6:00 PM IST (UTC+5:30)
+  const WEBINAR_TS = new Date("2026-10-31T18:00:00+05:30").getTime();
   const WEBINAR_LEN_MS = 90 * 60 * 1000; // 90 min live window
 
   const countdownEls = document.querySelectorAll(".countdown");
